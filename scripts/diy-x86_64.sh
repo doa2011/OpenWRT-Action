@@ -99,7 +99,7 @@ sed -i 's/option timeout 30/option timeout 60/g' package/system/rpcd/files/rpcd.
 sed -i 's#20) \* 1000#60) \* 1000#g' feeds/luci/modules/luci-base/htdocs/luci-static/resources/rpc.js
 
 # 修改默认ip
-sed -i "s/192.168.1.1/$LAN/g" package/base-files/files/bin/config_generate
+sed -i "s/192.168.99.1/$LAN/g" package/base-files/files/bin/config_generate
 
 # 为默认 root 密码进行设置
 if [ -n "$ROOT_PASSWORD" ]; then
