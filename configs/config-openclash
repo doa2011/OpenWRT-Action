@@ -1,2 +1,2 @@
 # openclash
-CONFIG_PACKAGE_luci-app-openclash=y
+#CONFIG_PACKAGE_luci-app-openclash=y
