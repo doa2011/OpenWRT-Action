@@ -41,7 +41,7 @@ grep HASH include/kernel-6.6 | awk -F'HASH-' '{print $2}' | awk '{print $1}' | m
 [ "$ENABLE_NIKKI" = "y" ] && curl -s $mirror/configs/config-nikki >> .config
 
 # openclash
-[ "$ENABLE_OPENCLASH" = "y" ] && curl -s $mirror/configs/config-openclash >> .config
+#[ "$ENABLE_OPENCLASH" = "y" ] && curl -s $mirror/configs/config-openclash >> .config
 
 # Lucky
 [ "$ENABLE_LUCKY" = "y" ] && curl -s $mirror/configs/config-lucky >> .config
