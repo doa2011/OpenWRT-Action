@@ -1,13 +1,9 @@
 #!/bin/bash
-
 # =====================
 # 配置参数
 # =====================
 # 脚本URL
 export mirror=https://raw.githubusercontent.com/grandway2025/OpenWRT-Action/main
-
-# 私有Gitea
-export gitea=git.kejizero.online/zhao
 
 # GitHub镜像
 export github="github.com"
@@ -60,7 +56,7 @@ sed -i 's/;)\s*\\/; \\/' include/feeds.mk
 
 # nginx - latest version
 rm -rf feeds/packages/net/nginx
-git clone https://$github/oppen321/feeds_packages_net_nginx -b openwrt-24.10 feeds/packages/net/nginx
+git clone https://$github//sbwml/feeds_packages_net_nginx -b openwrt-24.10 feeds/packages/net/nginx
 sed -i 's/procd_set_param stdout 1/procd_set_param stdout 0/g;s/procd_set_param stderr 1/procd_set_param stderr 0/g' feeds/packages/net/nginx/files/nginx.init
 
 # nginx - ubus
@@ -218,16 +214,16 @@ curl -s $mirror/doc/patch/firewall4/nftables/0002-nftables-add-brcm-fullconenat-
 curl -s $mirror/doc/patch/firewall4/nftables/0003-drop-rej-file.patch > package/network/utils/nftables/patches/0003-drop-rej-file.patch
 
 # FullCone module
-git clone https://$gitea/nft-fullcone package/new/nft-fullcone
+git clone https://$github/grandway2025/nft-fullcone package/new/nft-fullcone
 
 # IPv6 NAT
-git clone https://$gitea/package_new_nat6 package/new/nat6
+git clone https://$github/grandway2025/package_new_nat6 package/new/nat6
 
 # natflow
-git clone https://$gitea/package_new_natflow package/new/natflow
+git clone https://$github/grandway2025/package_new_natflow package/new/natflow
 
 # sfe
-git clone https://$github/zhiern/shortcut-fe package/new/shortcut-fe
+git clone https://$github/grandway2025/shortcut-fe package/new/shortcut-fe
 
 # Patch Luci add nft_fullcone/bcm_fullcone & shortcut-fe & natflow & ipv6-nat & custom nft command option
 pushd feeds/luci
@@ -258,11 +254,11 @@ curl -s $mirror/doc/patch/kernel-6.6/igc-fix/996-intel-igc-i225-i226-disable-eee
 rm -rf feeds/luci/applications/luci-app-dockerman
 git clone https://github.com/sirpdboy/luci-app-dockerman.git package/new/dockerman
 mv -n package/new/dockerman/luci-app-dockerman feeds/luci/applications && rm -rf package/new/dockerman
-    rm -rf feeds/packages/utils/{docker,dockerd,containerd,runc}
-    git clone https://$github/sbwml/packages_utils_docker feeds/packages/utils/docker
-    git clone https://$github/sbwml/packages_utils_dockerd feeds/packages/utils/dockerd
-    git clone https://$github/sbwml/packages_utils_containerd feeds/packages/utils/containerd
-    git clone https://$github/sbwml/packages_utils_runc feeds/packages/utils/runc
+rm -rf feeds/packages/utils/{docker,dockerd,containerd,runc}
+git clone https://$github/sbwml/packages_utils_docker feeds/packages/utils/docker
+git clone https://$github/sbwml/packages_utils_dockerd feeds/packages/utils/dockerd
+git clone https://$github/sbwml/packages_utils_containerd feeds/packages/utils/containerd
+git clone https://$github/sbwml/packages_utils_runc feeds/packages/utils/runc
 
 # TTYD
 sed -i 's/services/system/g' feeds/luci/applications/luci-app-ttyd/root/usr/share/luci/menu.d/luci-app-ttyd.json
@@ -271,14 +267,14 @@ sed -i 's/procd_set_param stdout 1/procd_set_param stdout 0/g' feeds/packages/ut
 sed -i 's/procd_set_param stderr 1/procd_set_param stderr 0/g' feeds/packages/utils/ttyd/files/ttyd.init
 
 # UPnP
-rm -rf feeds/{packages/net/miniupnpd,luci/applications/luci-app-upnp}
-git clone https://$gitea/miniupnpd feeds/packages/net/miniupnpd -b v2.3.9
-git clone https://$gitea/luci-app-upnp feeds/luci/applications/luci-app-upnp -b openwrt-24.10
+# rm -rf feeds/{packages/net/miniupnpd,luci/applications/luci-app-upnp}
+# git clone https://$github/grandway2025/miniupnpd feeds/packages/net/miniupnpd
+# git clone https://$github/grandway2025/luci-app-upnp feeds/luci/applications/luci-app-upnp
 
 # profile
 sed -i 's#\\u@\\h:\\w\\\$#\\[\\e[32;1m\\][\\u@\\h\\[\\e[0m\\] \\[\\033[01;34m\\]\\W\\[\\033[00m\\]\\[\\e[32;1m\\]]\\[\\e[0m\\]\\\$#g' package/base-files/files/etc/profile
 sed -ri 's/(export PATH=")[^"]*/\1%PATH%:\/opt\/bin:\/opt\/sbin:\/opt\/usr\/bin:\/opt\/usr\/sbin/' package/base-files/files/etc/profile
-sed -i '/PS1/a\export TERM=xterm-color' package/base-files/files/etc/profile
+sed -i '/ENV/i\export TERM=xterm-color' package/base-files/files/etc/profile
 
 # 切换bash
 sed -i 's#ash#bash#g' package/base-files/files/etc/passwd
@@ -289,21 +285,24 @@ curl -so files/root/.bashrc $mirror/doc/files/root/.bashrc
 
 # rootfs files
 mkdir -p files/etc/sysctl.d
+mkdir -p files/etc/hotplug.d/iface
+mkdir -p files/etc/hotplug.d/net
 curl -so files/etc/sysctl.d/10-default.conf $mirror/doc/files/etc/sysctl.d/10-default.conf
 curl -so files/etc/sysctl.d/15-vm-swappiness.conf $mirror/doc/files/etc/sysctl.d/15-vm-swappiness.conf
 curl -so files/etc/sysctl.d/16-udp-buffer-size.conf $mirror/doc/files/etc/sysctl.d/16-udp-buffer-size.conf
+curl -so files/etc/hotplug.d/iface/99-zzz-odhcpd $mirror/doc/files/etc/hotplug.d/iface/99-zzz-odhcpd
+curl -so files/etc/hotplug.d/net/01-maximize_nic_rx_tx_buffers  $mirror/doc/files/etc/hotplug.d/net/01-maximize_nic_rx_tx_buffers
 
 # ZeroWrt Options Menu
 mkdir -p files/bin
-mkdir -p root
 curl -so files/root/version.txt $mirror/doc/files/root/version.txt
 curl -so files/bin/ZeroWrt $mirror/doc/files/bin/ZeroWrt
 chmod +x files/bin/ZeroWrt
 chmod +x files/root/version.txt
 
 # key-build.pub
-curl -so files/root/my-private.key.pub https://raw.githubusercontent.com/zhiern/ipkg-make-index/refs/heads/main/my-private.key.pub
-chmod +x files/root/my-private.key.pub
+curl -so files/root/key-build.pub https://opkg.kejizero.online/key-build.pub
+chmod +x files/root/key-build.pub
 
 # NTP
 sed -i 's/0.openwrt.pool.ntp.org/ntp1.aliyun.com/g' package/base-files/files/bin/config_generate
@@ -390,7 +389,7 @@ git clone https://$github/sbwml/luci-app-openlist2 package/new/openlist --depth=
 sed -i 's/syslog/none/g' feeds/packages/admin/netdata/files/netdata.conf
 
 # caddy
-git clone https://git.kejizero.online/zhao/luci-app-caddy package/new/caddy
+git clone https://$github/grandway2025/luci-app-caddy package/new/caddy
 
 # Mosdns
 git clone https://$github/sbwml/luci-app-mosdns -b v5 package/new/mosdns
@@ -399,7 +398,7 @@ git clone https://$github/sbwml/luci-app-mosdns -b v5 package/new/mosdns
 git clone https://$github/destan19/OpenAppFilter package/new/OpenAppFilter
 
 # adguardhome
-git clone https://$gitea/luci-app-adguardhome package/new/luci-app-adguardhome
+git clone https://$github/grandway2025/luci-app-adguardhome package/new/luci-app-adguardhome
 
 # unzip
 rm -rf feeds/packages/utils/unzip
@@ -412,13 +411,16 @@ mv -n package/new/poweroff/luci-app-poweroffdevice package/new/luci-app-poweroff
 # luci-app-taskplan
 git clone https://github.com/sirpdboy/luci-app-taskplan package/new/luci-app-taskplan
 
+# iperf3
+sed -i "s/D_GNU_SOURCE/D_GNU_SOURCE -funroll-loops/g" feeds/packages/net/iperf3/Makefile
+
 # nlbwmon
 sed -i 's/services/network/g' feeds/luci/applications/luci-app-nlbwmon/root/usr/share/luci/menu.d/luci-app-nlbwmon.json
 sed -i 's/services/network/g' feeds/luci/applications/luci-app-nlbwmon/htdocs/luci-static/resources/view/nlbw/config.js
 
 # argon && argon-config
 rm -rf feeds/luci/themes/luci-theme-argon
-git clone https://github.com/grandway2025/argon package/new/luci-theme-argon --depth=1
+git clone https://$github/grandway2025/argon package/new/luci-theme-argon --depth=1
 
 # luci-app-advancedplus
 git clone https://$github/sirpdboy/luci-app-advancedplus.git package/new/luci-app-advancedplus
@@ -430,13 +432,17 @@ mv -n package/new/kucat/luci-theme-kucat package/new/luci-theme-kucat && rm -rf 
 # lucky
 git clone https://$github/gdy666/luci-app-lucky.git package/new/lucky
 
+# luci-app-socat
+git clone https://$github/grandway2025/luci-app-socat package/new/socat
+mv -n package/new/socat/luci-app-socat package/new/luci-app-socat && rm -rf package/new/socat
+
 # custom packages pkgs
 rm -rf feeds/packages/utils/coremark
 git clone https://$github/sbwml/openwrt_pkgs package/new/custom --depth=1
 rm -rf package/new/custom/luci-app-adguardhome
 
 # autocore-arm
-git clone https://$gitea/autocore-arm package/new/autocore-arm
+git clone https://$github/grandway2025/autocore-arm package/new/autocore-arm
 
 sed -i 's/O2/O2 -march=x86-64-v2/g' include/target.mk
 
