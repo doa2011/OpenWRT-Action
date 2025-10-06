@@ -35,10 +35,10 @@ grep HASH include/kernel-6.6 | awk -F'HASH-' '{print $2}' | awk '{print $1}' | m
 [ "$ENABLE_SSRP" = "y" ] && curl -s $mirror/configs/config-ssrp >> .config
 
 # passwall
-[ "$ENABLE_PASSWALL" = "y" ] && curl -s $mirror/configs/config-passwall >> .config
+# [ "$ENABLE_PASSWALL" = "y" ] && curl -s $mirror/configs/config-passwall >> .config
 
 # nikki
-[ "$ENABLE_NIKKI" = "y" ] && curl -s $mirror/configs/config-nikki >> .config
+# [ "$ENABLE_NIKKI" = "y" ] && curl -s $mirror/configs/config-nikki >> .config
 
 # openclash
 #[ "$ENABLE_OPENCLASH" = "y" ] && curl -s $mirror/configs/config-openclash >> .config
