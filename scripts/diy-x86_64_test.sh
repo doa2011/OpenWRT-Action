@@ -124,7 +124,7 @@ declare -A EXTRA_PKGS=(
   [OpenAppFilter]="https://${GITHUB}/destan19/OpenAppFilter"
   [luci-app-poweroffdevice]="https://${GITHUB}/sirpdboy/luci-app-poweroffdevice"
   [openwrt-gecoosac]="https://${GITHUB}/lwb1978/openwrt-gecoosac"
-  [luci-app-xupnpd]="https://${GITHUB}"/jarod360/luci-app-xupnpd"
+  [luci-app-xupnpd]="https://${GITHUB}/jarod360/luci-app-xupnpd"
 )
 declare -A EXTRA_BRANCHES=(
   [mosdns]="v5"
