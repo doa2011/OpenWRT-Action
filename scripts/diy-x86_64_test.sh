@@ -94,7 +94,7 @@ sed -i 's#20) \* 1000#60) \* 1000#g' \
 log_end
 # ---------- 9️⃣ 默认 IP & root 密码 ----------
 log "Set default LAN address & root password"
-sed -i "s/192.168.1.1/${LAN}/" package/base-files/files/bin/config_generate
+sed -i "s/192.168.99.1/${LAN}/" package/base-files/files/bin/config_generate
 if [[ -n "${ROOT_PASSWORD:-}" ]]; then
   pass_hash=$(openssl passwd -5 "${ROOT_PASSWORD}")
   sed -i "s|^root:[^:]*:|root:${pass_hash}:|" \
@@ -123,6 +123,8 @@ declare -A EXTRA_PKGS=(
   [mosdns]="https://${GITHUB}/sbwml/luci-app-mosdns"
   [OpenAppFilter]="https://${GITHUB}/destan19/OpenAppFilter"
   [luci-app-poweroffdevice]="https://${GITHUB}/sirpdboy/luci-app-poweroffdevice"
+  [openwrt-gecoosac]="https://${GITHUB}/lwb1978/openwrt-gecoosac"
+  [luci-app-xupnpd]="https://${GITHUB}"/jarod360/luci-app-xupnpd"
 )
 declare -A EXTRA_BRANCHES=(
   [mosdns]="v5"
